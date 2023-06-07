@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\{
+    AdminController,
+    RecipeController,
+    CategoryController
+};
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+
+Route::group(['prefix' => 'admin'], function() {
+    Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
+    Route::get('categories',[CategoryController::class,'index'])->name('categories');
+    Route::get('recipes',[RecipeController::class,'dashboard'])->name('recipes');
 });
