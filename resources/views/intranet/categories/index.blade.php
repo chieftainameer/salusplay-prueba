@@ -5,7 +5,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h2>Categories</h2>
             <div>
-                <a href="" class="btn btn-primary">New Category</a>
+                <a href="{{ route('categories.create') }}" class="btn btn-primary">New Category</a>
             </div>
         </div>
         <div class="card-body">
@@ -25,7 +25,7 @@
                             <th scope="{{ $category->id }}">{{ $category->id }}</th>
                             <td>{{ $category->title }}</td>
                             <td>@include('partials.general_information',['model' => $category])</td>
-                            <td>@include('partials.action',['model' => $category])</td>
+                            <td>@include('partials.action',['model' => $category,'routeResource' => 'categories'])</td>
                         </tr>
                     @endforeach
                     </tbody>

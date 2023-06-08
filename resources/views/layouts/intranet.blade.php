@@ -11,8 +11,8 @@
 <div id="mySidebar" class="sidebar">
     <div>
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="{{ route('categories') }}">Categories</a>
-        <a href="{{ route('recipes') }}">Recipes</a>
+        <a href="{{ route('categories.index') }}">Categories</a>
+        <a href="{{ route('recipes.index') }}">Recipes</a>
     </div>
 
 </div>
