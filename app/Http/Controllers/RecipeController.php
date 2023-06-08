@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RecipeRequest;
+use App\Http\Requests\UpdateRecipe;
 use App\Models\Category;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class RecipeController extends Controller
@@ -16,10 +18,10 @@ class RecipeController extends Controller
     public function index()
     {
         $recipes = Recipe::with('category')
-            ->orderBy(Recipe::FIELD_ID,'desc')
+            ->orderBy(Recipe::FIELD_ID, 'desc')
             ->simplePaginate(10);
 
-        return view('intranet.recipes.index',compact('recipes'));
+        return view('intranet.recipes.index', compact('recipes'));
     }
 
     /**
@@ -27,14 +29,14 @@ class RecipeController extends Controller
      */
     public function create()
     {
-        $categories = Category::query()->visible()->orderBy(Category::FIELD_TITLE,'asc')->get();
-        return view('intranet.recipes.form',compact('categories'));
+        $categories = Category::query()->visible()->orderBy(Category::FIELD_TITLE, 'asc')->get();
+        return view('intranet.recipes.form', compact('categories'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      */
     public function store(RecipeRequest $request)
     {
@@ -53,13 +55,11 @@ class RecipeController extends Controller
                 $request->{Recipe::FIELD_THUMBNAIL}->move(public_path('images'), $imageName);
                 $data['thumbnail'] = $imageName;
             }
-            $category->recipes()->create(array_merge($data,$validated));
-            flash('Recipe created successfully','success');
+            $category->recipes()->create(array_merge($data, $validated));
+            flash('Recipe created successfully', 'success');
             return redirect()->route('recipes.index');
-        }
-        catch(\Exception $e)
-        {
-            flash($e->getMessage(),'danger');
+        } catch (\Exception $e) {
+            flash($e->getMessage(), 'danger');
             return redirect()->back()->withInput();
         }
     }
@@ -67,32 +67,36 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        //
+        return $this->toggleVisibility($category,1,'Recipe is visible now','Could not make recipe visible');
+    }
+
+    public function hide(Category $category)
+    {
+        return $this->toggleVisibility($category,0,'Recipes is hidden now','Could not make recipe hidden');
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  Recipe $recipe
+     * @param Recipe $recipe
      */
     public function edit(Recipe $recipe)
     {
-        $categories = Category::query()->visible()->orderBy(Category::FIELD_TITLE,'asc')->get();
-        return view('intranet.recipes.form',compact('recipe','categories'));
+        $categories = Category::query()->visible()->orderBy(Category::FIELD_TITLE, 'asc')->get();
+        return view('intranet.recipes.form', compact('recipe', 'categories'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  Recipe $recipe
+     * @param \Illuminate\Http\Request $request
+     * @param Recipe $recipe
      */
-    public function update(RecipeRequest $request,Recipe $recipe)
+    public function update(UpdateRecipe $request, Recipe $recipe)
     {
         $imageName = $recipe->{Recipe::FIELD_THUMBNAIL};
         try {
@@ -103,7 +107,7 @@ class RecipeController extends Controller
 
             $recipe->update([
                 Recipe::FIELD_TITLE => $request->{Recipe::FIELD_TITLE},
-                Recipe::FIELD_SLUG => Str::slug($request->{Recipe::FIELD_SLUG}),
+                Recipe::FIELD_SLUG => Str::slug($request->{Recipe::FIELD_TITLE}),
                 Recipe::FIELD_PREPARATION_TIME => $request->{Recipe::FIELD_PREPARATION_TIME},
                 Recipe::FIELD_NUM_OF_RATIONES => $request->{Recipe::FIELD_NUM_OF_RATIONES},
                 Recipe::FIELD_INGREDIENTS => $request->{Recipe::FIELD_INGREDIENTS},
@@ -112,12 +116,10 @@ class RecipeController extends Controller
                 Recipe::FIELD_THUMBNAIL => $imageName,
             ]);
 
-            flash('Recipe ' . $recipe->{Recipe::FIELD_TITLE} . ' updated','success');
+            flash('Recipe ' . $recipe->{Recipe::FIELD_TITLE} . ' updated', 'success');
             return redirect()->route('recipes.index');
-        }
-        catch(\Exception $e)
-        {
-            flash("Recipe could not be updated successfully",'danger');
+        } catch (\Exception $e) {
+            flash("Recipe could not be updated successfully", 'danger');
             return redirect()->back()->withInput();
         }
     }
@@ -125,19 +127,37 @@ class RecipeController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Recipe $recipe
+     * @param Recipe $recipe
      */
     public function destroy(Recipe $recipe)
     {
         try {
             $recipe->delete();
-            flash('Recipe deleted successfully','success');
+            flash('Recipe deleted successfully', 'success');
             return redirect()->route('recipes.index');
-        }
-        catch(\Exception $e)
-        {
-            flash('Recipe could not be deleted successfully','danger');
+        } catch (\Exception $e) {
+            flash('Recipe could not be deleted successfully', 'danger');
             return redirect()->back();
         }
     }
+
+    private function toggleVisibility($recipe, $value, $messageSuccess, $messageFail)
+    {
+        DB::beginTransaction();
+        try {
+
+            $recipe->update([
+                Recipe::FIELD_VISIBLE => $value
+            ]);
+
+            DB::commit();
+            flash($messageSuccess, 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            flash($e->getMessage(), 'danger');
+            return redirect()->back();
+        }
+    }
+
 }

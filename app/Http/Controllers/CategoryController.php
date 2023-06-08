@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\UpdateCategory;
 use App\Models\Category;
+use App\Models\Recipe;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -59,12 +61,16 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Category $category
      */
-    public function show($id)
+    public function show(Category $category)
     {
-        //
+       return $this->toggleVisibility($category,1,'Category and associated recipes are visible now','Could not make category and associated recipes visible');
+    }
+
+    public function hide(Category $category)
+    {
+       return $this->toggleVisibility($category,0,'Category and associated recipes are hidden now','Could not make category and associated recipes hidden');
     }
 
     /**
@@ -83,12 +89,12 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @param  Category  $category
      */
-    public function update(CategoryRequest $request, Category $category)
+    public function update(UpdateCategory $request, Category $category)
     {
         try {
             $category->update([
                 Category::FIELD_TITLE => $request->{Category::FIELD_TITLE},
-                Category::FIELD_SLUG => Str::slug($request->{Category::FIELD_SLUG}),
+                Category::FIELD_SLUG => Str::slug($request->{Category::FIELD_TITLE}),
                 Category::FIELD_VISIBLE => $request->{Category::FIELD_VISIBLE} == 'on' ? 1 : 0,
             ]);
 
@@ -123,6 +129,30 @@ class CategoryController extends Controller
         catch(\Exception $e){
             DB::rollBack();
             flash('Error deleting category','danger');
+            return redirect()->back();
+        }
+    }
+
+    private function toggleVisibility($category,$value,$messageSuccess,$messageFail)
+    {
+        DB::beginTransaction();
+        try {
+            $category->update([
+                Category::FIELD_VISIBLE => $value
+            ]);
+            $category->recipes->each(function($recipe) use ($value){
+                $recipe->update([
+                    Recipe::FIELD_VISIBLE => $value
+                ]);
+            });
+
+            DB::commit();
+            flash($messageSuccess,'success');
+            return redirect()->back();
+        }
+        catch(\Exception $e){
+            DB::rollBack();
+            flash($e->getMessage(),'danger');
             return redirect()->back();
         }
     }

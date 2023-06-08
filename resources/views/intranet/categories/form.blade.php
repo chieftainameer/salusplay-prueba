@@ -23,15 +23,6 @@
                             required
                     ></x-inputs.common>
 
-                    <x-inputs.checkbox
-                            :model="isset($category) ? $category : null"
-                            inputName="visible"
-                            inputLabel="Visibility"
-                            inputLabel2="Hidden"
-                            infoMessage="Check this inbox if you want to hide this category, by default it will be visible"
-                    ></x-inputs.checkbox>
-
-
                     <div>
                         <button class="btn btn-primary" type="submit">Save</button>
                         <a class="btn btn-danger" href="{{ route('categories.index') }}">Cancel</a>

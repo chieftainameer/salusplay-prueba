@@ -15,14 +15,6 @@
                     @if(isset($recipe)) @method('PUT') @endif
                     @csrf
 
-                    <x-inputs.checkbox
-                            :model="isset($recipe) ? $recipe : null"
-                            inputName="visible"
-                            inputLabel="Visibility"
-                            inputLabel2="Hidden"
-                            infoMessage="Check this inbox if you want to hide this category, by default it will be visible"
-                    ></x-inputs.checkbox>
-
                     <x-inputs.common
                             :model="isset($recipe) ? $recipe : null"
                             inputLabel="Title"
@@ -53,7 +45,7 @@
                             inputName="thumbnail"
                             id="thumbnail"
                             infoMessage="Primary image of the recipe"
-                            required
+
                     ></x-inputs.file-input>
 
                     <x-thumbnail-preview
@@ -68,6 +60,7 @@
                             inputLabel="Preparation time"
                             inputName="preparation_time"
                             infoMessage="Enter preparation time of this recipe in minuts"
+                            max="100000"
                             size="10"
                             required
                     ></x-inputs.common>
@@ -78,6 +71,7 @@
                             inputLabel="Number of rations"
                             inputName="num_of_rationes"
                             infoMessage="Enter no of rations in one serving"
+                            max="10000"
                             size="10"
                             required
                     ></x-inputs.common>

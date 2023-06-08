@@ -24,5 +24,8 @@ Route::get('/recipes/{recipe:slug}',[HomeController::class,'showRecipe'])->name(
 Route::group(['prefix' => 'admin'], function() {
     Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
     Route::resource('categories',CategoryController::class);
+    Route::get('/categories/hide/{recipe}',[CategoryController::class,'hide'])->name('categories.hide');
     Route::resource('recipes',RecipeController::class);
+    Route::get('/recipes/hide/{recipe}',[RecipeController::class,'hide'])->name('recipes.hide');
+
 });
