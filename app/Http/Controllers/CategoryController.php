@@ -65,13 +65,28 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-       return $this->toggleVisibility($category,1,'Category and associated recipes are visible now','Could not make category and associated recipes visible');
-    }
 
-    public function hide(Category $category)
-    {
-       return $this->toggleVisibility($category,0,'Category and associated recipes are hidden now','Could not make category and associated recipes hidden');
-    }
+        DB::beginTransaction();
+        try {
+            $category->update([
+                Category::FIELD_VISIBLE => !$category->{Category::FIELD_VISIBLE}
+            ]);
+            $category->recipes->each(function($recipe){
+                $recipe->update([
+                    Recipe::FIELD_VISIBLE => !$recipe->{Recipe::FIELD_VISIBLE}
+                ]);
+            });
+
+            DB::commit();
+            flash('Visibility changed','success');
+            return redirect()->back();
+        }
+        catch(\Exception $e){
+            DB::rollBack();
+            flash('Error, changing visibility','danger');
+            return redirect()->back();
+        }    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -133,27 +148,4 @@ class CategoryController extends Controller
         }
     }
 
-    private function toggleVisibility($category,$value,$messageSuccess,$messageFail)
-    {
-        DB::beginTransaction();
-        try {
-            $category->update([
-                Category::FIELD_VISIBLE => $value
-            ]);
-            $category->recipes->each(function($recipe) use ($value){
-                $recipe->update([
-                    Recipe::FIELD_VISIBLE => $value
-                ]);
-            });
-
-            DB::commit();
-            flash($messageSuccess,'success');
-            return redirect()->back();
-        }
-        catch(\Exception $e){
-            DB::rollBack();
-            flash($e->getMessage(),'danger');
-            return redirect()->back();
-        }
-    }
 }

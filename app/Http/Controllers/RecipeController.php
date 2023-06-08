@@ -69,15 +69,24 @@ class RecipeController extends Controller
      *
      * @param int $id
      */
-    public function show(Category $category)
+    public function show(Recipe $recipe)
     {
-        return $this->toggleVisibility($category,1,'Recipe is visible now','Could not make recipe visible');
-    }
+        DB::beginTransaction();
+        try {
 
-    public function hide(Category $category)
-    {
-        return $this->toggleVisibility($category,0,'Recipes is hidden now','Could not make recipe hidden');
-    }
+            $recipe->update([
+                Recipe::FIELD_VISIBLE => !$recipe->{Recipe::FIELD_VISIBLE}
+            ]);
+
+            DB::commit();
+            flash('Recipe status changed', 'success');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            flash('Error, updating recipe status', 'danger');
+            return redirect()->back();
+        }    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -141,23 +150,5 @@ class RecipeController extends Controller
         }
     }
 
-    private function toggleVisibility($recipe, $value, $messageSuccess, $messageFail)
-    {
-        DB::beginTransaction();
-        try {
-
-            $recipe->update([
-                Recipe::FIELD_VISIBLE => $value
-            ]);
-
-            DB::commit();
-            flash($messageSuccess, 'success');
-            return redirect()->back();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            flash($e->getMessage(), 'danger');
-            return redirect()->back();
-        }
-    }
 
 }

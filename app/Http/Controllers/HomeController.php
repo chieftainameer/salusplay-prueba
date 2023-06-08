@@ -9,7 +9,11 @@ class HomeController extends Controller
 {
     public function home()
     {
-        $categories = Category::with('recipes')->visible()->get();
+        $categories = Category::with('recipes')
+            ->visible()
+            ->orderBy(Category::FIELD_TITLE,'asc')
+            ->get();
+
         return view('pages.home',compact('categories'));
     }
 

@@ -1,15 +1,9 @@
 <div class="btn-group">
-    @if($model->visible)
-    <a class="btn btn-outline-primary" data-toggle="tooltip" title="hide me"
-       href='{{ route($routeResource.'.hide',$model) }}'>
-        <i class="fa fa-eye "><!----></i>
-    </a>
-    @else
+
         <a class="btn btn-outline-primary" data-toggle="tooltip" title="show me"
            href='{{ route($routeResource.'.show',$model) }}'>
-            <i class="fa fa-eye-slash "><!----></i>
+            @if($model->visible) <i class="fa fa-eye "><!----></i> @else <i class="fa fa-eye-slash "><!----></i> @endif
         </a>
-    @endif
     <a class="btn btn-outline-success" data-toggle="tooltip" title="Edit"
             href="{{ route($routeResource.'.edit',$model) }}">
         <i class="fa fa-edit text-success"><!----></i>

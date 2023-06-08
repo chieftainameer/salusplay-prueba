@@ -8,7 +8,7 @@
         <div class="wrapper">
             <i id="left" class="fa-solid fa-angle-left"></i>
             <div class="carousel">
-                @foreach($category->recipes as $recipe)
+                @foreach($category->recipes()->orderBy('published_at','desc')->get() as $recipe)
                     <img src="{{asset('images/' . $recipe->thumbnail)}}" alt="img" draggable="false">
                 @endforeach
             </div>
