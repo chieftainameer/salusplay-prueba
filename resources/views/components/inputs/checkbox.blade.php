@@ -1,4 +1,4 @@
-<div class="form-group row">
+<div class="form-group row my-3">
     <label class="col-md-3 col-form-label">@lang("$inputLabel")</label>
     <div class="col-md-9">
         <div class="form-check mt-2">

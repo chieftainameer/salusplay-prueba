@@ -1,4 +1,4 @@
-<div class="form-group row">
+<div class="form-group row my-3">
     @if($inputLabel)
         <label class="col-md-3 col-form-label" for="{{$inputName}}">
             {{ $inputLabel }} @if($required) * @endif

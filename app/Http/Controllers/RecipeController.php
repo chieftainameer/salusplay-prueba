@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 
@@ -21,12 +22,11 @@ class RecipeController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        $categories = Category::query()->visible()->orderBy(Category::FIELD_TITLE,'asc')->get();
+        return view('intranet.recipes.form',compact('categories'));
     }
 
     /**

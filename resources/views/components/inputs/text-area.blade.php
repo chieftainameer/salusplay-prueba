@@ -1,7 +1,6 @@
-<div class="form-group row">
+<div class="form-group row my-3">
     @if($inputLabel)
-        <label @if($language) class="col-md-2 col-form-label" @else class="col-md-3 col-form-label"
-               @endif for="{{$inputName}}">
+        <label  class="col-md-3 col-form-label" for="{{$inputName}}">
             @lang("$inputLabel") @if($required) * @endif
         </label>
     @endif
