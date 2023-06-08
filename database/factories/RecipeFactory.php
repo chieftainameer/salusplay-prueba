@@ -20,6 +20,7 @@ class RecipeFactory extends Factory
         return [
             Recipe::FIELD_TITLE => $title,
             Recipe::FIELD_SLUG => $slug,
+            Recipe::FIELD_THUMBNAIL => $this->faker->image(public_path('images'),300,300,false,false),
             Recipe::FIELD_PREPARATION_TIME => $this->faker->numberBetween(30,180),
             Recipe::FIELD_NUM_OF_RATIONES => $this->faker->numberBetween(1,5),
             Recipe::FIELD_INGREDIENTS => $this->faker->words($this->faker->numberBetween(3,9),true),

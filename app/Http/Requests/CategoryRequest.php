@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest
@@ -13,7 +14,8 @@ class CategoryRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        // here we can use gates or policies to restrict or allow a user to create,modify a record.
+        return true;
     }
 
     /**
@@ -23,8 +25,6 @@ class CategoryRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return Category::$rules;
     }
 }

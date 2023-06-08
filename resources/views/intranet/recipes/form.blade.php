@@ -11,7 +11,7 @@
             </div>
             <div class="card-body">
                 <form action="{{isset($recipe) ? route('recipes.update',$recipe) : route('recipes.store')}}"
-                      method="POST">
+                      method="POST" enctype="multipart/form-data">
                     @if(isset($recipe)) @method('PUT') @endif
                     @csrf
 

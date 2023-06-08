@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Recipe;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RecipeRequest extends FormRequest
@@ -13,7 +14,7 @@ class RecipeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -23,8 +24,6 @@ class RecipeRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            //
-        ];
+        return Recipe::$rules;
     }
 }

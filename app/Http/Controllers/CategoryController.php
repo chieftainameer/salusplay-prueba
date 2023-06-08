@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -30,11 +32,28 @@ class CategoryController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CategoryRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $data = [
+            Category::FIELD_SLUG => Str::slug($request->{Category::FIELD_TITLE}),
+            Category::FIELD_VISIBLE => $request->{Category::FIELD_VISIBLE} == 'on' ? 1 : 0,
+        ];
+
+        $data = array_merge($validated,$data);
+
+        try {
+            $category = Category::create($data);
+            flash('Category ' . $category->{Category::FIELD_TITLE} . ' created','success');
+            return redirect()->route('categories.index');
+        }
+        catch(\Exception $e)
+        {
+            flash('Category could not be created','danger');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
@@ -62,22 +81,49 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Category  $category
      */
-    public function update(Request $request, $id)
+    public function update(CategoryRequest $request, Category $category)
     {
-        //
+        try {
+            $category->update([
+                Category::FIELD_TITLE => $request->{Category::FIELD_TITLE},
+                Category::FIELD_SLUG => Str::slug($request->{Category::FIELD_SLUG}),
+                Category::FIELD_VISIBLE => $request->{Category::FIELD_VISIBLE} == 'on' ? 1 : 0,
+            ]);
+
+            flash('Category ' . $category->{Category::FIELD_TITLE} . ' updated','success');
+            return redirect()->route('categories.index');
+        }
+        catch(\Exception $e)
+        {
+            flash("Category could not be updated",'danger');
+            return redirect()->back()->withInput();
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Category $category
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        DB::beginTransaction();
+        try {
+            $category->recipes->each(function($recipe){
+                $recipe->delete();
+            });
+
+            $category->delete();
+            DB::commit();
+            flash('Category and all associated recipes deleted','success');
+            return redirect()->route('categories.index');
+        }
+        catch(\Exception $e){
+            DB::rollBack();
+            flash('Error deleting category','danger');
+            return redirect()->back();
+        }
     }
 }

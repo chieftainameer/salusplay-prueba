@@ -34,7 +34,7 @@ class Recipe extends Model
 
     static $rules = [
         self::FIELD_TITLE => 'required|string|unique:recipes,title|max:250',
-        self::FIELD_CATEGORY_ID => 'required|number|exists:categories,id',
+        self::FIELD_CATEGORY_ID => 'required|numeric|exists:categories,id',
         self::FIELD_PREPARATION_TIME => 'required|numeric',
         self::FIELD_NUM_OF_RATIONES => 'required|numeric',
         self::FIELD_INGREDIENTS => 'required|string',

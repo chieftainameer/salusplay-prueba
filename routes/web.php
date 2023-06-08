@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     AdminController,
     RecipeController,
-    CategoryController
+    CategoryController,
+    HomeController
 };
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,9 @@ use App\Http\Controllers\{
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('/',[HomeController::class,'home'])->name('home');
+Route::get('/categories/{category:slug}',[HomeController::class,'showCategory'])->name('home.categories.show');
+Route::get('/recipes/{recipe:slug}',[HomeController::class,'showRecipe'])->name('home.recipes.show');
 
 Route::group(['prefix' => 'admin'], function() {
     Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
