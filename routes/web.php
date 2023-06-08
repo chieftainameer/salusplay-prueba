@@ -21,5 +21,5 @@ use App\Http\Controllers\{
 Route::group(['prefix' => 'admin'], function() {
     Route::get('dashboard',[AdminController::class,'dashboard'])->name('dashboard');
     Route::get('categories',[CategoryController::class,'index'])->name('categories');
-    Route::get('recipes',[RecipeController::class,'dashboard'])->name('recipes');
+    Route::get('recipes',[RecipeController::class,'index'])->name('recipes');
 });

@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Categories</h5>
-                    <a href="#" class="btn btn-primary">Go to categories</a>
+                    <a href="{{ route('categories') }}" class="btn btn-primary">Go to categories</a>
                 </div>
             </div>
         </div>
@@ -15,7 +15,7 @@
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Recipes</h5>
-                    <a href="#" class="btn btn-primary">Go to recipes</a>
+                    <a href="{{ route('recipes') }}" class="btn btn-primary">Go to recipes</a>
                 </div>
             </div>
         </div>

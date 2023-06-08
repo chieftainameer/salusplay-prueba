@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Recipe;
 use Illuminate\Http\Request;
 
 class RecipeController extends Controller
@@ -11,7 +12,11 @@ class RecipeController extends Controller
      */
     public function index()
     {
-        return view('intranet.recipes.index');
+        $recipes = Recipe::with('category')
+            ->orderBy(Recipe::FIELD_ID,'desc')
+            ->simplePaginate(10);
+
+        return view('intranet.recipes.index',compact('recipes'));
     }
 
     /**

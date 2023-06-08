@@ -8,18 +8,11 @@
     <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 </head>
 <body>
-<div id="mySidebar" class="sidebar d-flex flex-column justify-content-between align-items-start">
+<div id="mySidebar" class="sidebar">
     <div>
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Categories</a>
-        <a href="#">Recipes</a>
-    </div>
-    <div class="bg-primary w-100">
-        <li class="nav-item list-style-none">
-            <a class="nav-link">
-                Logout
-            </a>
-        </li>
+        <a href="{{ route('categories') }}">Categories</a>
+        <a href="{{ route('recipes') }}">Recipes</a>
     </div>
 
 </div>
@@ -36,9 +29,13 @@
 </div>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
-        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
-        crossorigin="anonymous"></script>
+<script src="{{asset('vendors/js/jquery.min.js')}}"></script>
+
+<script src="{{asset('vendors/js/popper.min.js')}}"></script>
+<script src="{{asset('vendors/js/bootstrap.min.js')}}"></script>
+<script src="{{asset('vendors/js/pace.min.js')}}"></script>
 <script src="{{ asset('js/admin.js') }}"></script>
+
+@stack('innerJs')
 </body>
 </html>

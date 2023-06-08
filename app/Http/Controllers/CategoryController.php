@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        //
+        $categories = Category::query()->orderBy(Category::FIELD_TITLE,'asc')->simplePaginate(10);
+        return view('intranet.categories.index',compact('categories'));
     }
 
     /**
