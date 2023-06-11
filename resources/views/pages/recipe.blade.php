@@ -38,7 +38,7 @@
                 </dl>
                 <dl class="row">
                     <dt class="col-sm-3">Rations</dt>
-                    <dd class="col-sm-9">{{ $recipe->num_of_rations }}</dd>
+                    <dd class="col-sm-9">{{ $recipe->num_of_rationes }}</dd>
                 </dl>
 
                 <dl class="row">
@@ -47,7 +47,7 @@
                 </dl>
                 <dl class="row">
                     <dt class="col-sm-3">Procedure</dt>
-                    <dd class="col-sm-9">{{ $recipe->procedure }}</dd>
+                    <dd class="col-sm-9">{!! $recipe->procedure !!}</dd>
                 </dl>
 
 

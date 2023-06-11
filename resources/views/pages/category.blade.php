@@ -14,7 +14,7 @@
                     <img src="{{asset('images/' . $recipe->thumbnail)}}" class="card-img-top" alt="recipe thumbnail">
                     <div class="card-body">
                         <p class="card-subtitle">{{ $recipe->ingredients }}</p>
-                        <p class="card-text">{{ \Illuminate\Support\Str::limit($recipe->procedure,50,'...') }}</p>
+                        <p class="card-text">{!! \Illuminate\Support\Str::limit($recipe->procedure,50,'...') !!}</p>
                     </div>
                     <div class="card-footer">
                         <a href="{{ route('home.recipes.show',$recipe) }}" class="card-link">See Recipe</a>
