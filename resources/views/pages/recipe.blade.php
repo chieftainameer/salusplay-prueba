@@ -34,7 +34,7 @@
 
                 <dl class="row">
                     <dt class="col-sm-3">Preparation Time</dt>
-                    <dd class="col-sm-9">{{ (float)$recipe->preparation_time/60 }} mins</dd>
+                    <dd class="col-sm-9">{{ (float)$recipe->preparation_time/60 }} hrs</dd>
                 </dl>
                 <dl class="row">
                     <dt class="col-sm-3">Rations</dt>

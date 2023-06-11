@@ -8,8 +8,10 @@
         <div class="wrapper">
             <i id="left" class="fa-solid fa-angle-left"></i>
             <div class="carousel">
-                @foreach($category->recipes()->orderBy('published_at','desc')->get() as $recipe)
-                    <img src="{{asset('images/' . $recipe->thumbnail)}}" alt="img" draggable="false">
+                @foreach($category->recipes()->visible()->orderBy('published_at','desc')->get() as $recipe)
+                    <a href="{{ route('home.recipes.show',$recipe) }}">
+                        <img src="{{asset('images/' . $recipe->thumbnail)}}" alt="img" draggable="false">
+                    </a>
                 @endforeach
             </div>
             <i id="right" class="fa-solid fa-angle-right"></i>

@@ -2,10 +2,6 @@ const mainSection = $('.main-section');
 const toggleBtn = $('#toggle-btn');
 let posts,photos = [];
 
-
-mainSection.hide();
-
-
 async function getData(event) {
 
     await fetch("https://jsonplaceholder.typicode.com/posts")
@@ -68,13 +64,10 @@ function formatText(item,text)
         var truncatedText = text.substring(0, 100);
         var remainingText = text.substring(100);
 
-        // Create a <span> element with id "dots" containing three dots
         var $dotsSpan = $('<span>').attr('id', 'dots').text('...');
 
-        // Create another <span> element with id "more" for the remaining text
         var $moreSpan = $('<span>').attr('id', 'more').text(remainingText);
 
-        // Set the updated HTML content with the <span> elements
         return truncatedText + ' ' + $dotsSpan.prop('outerHTML') + $moreSpan.prop('outerHTML');
     }
 }
@@ -91,6 +84,8 @@ function btnToggle()
 }
 
 $(document).ready(function(){
+    mainSection.hide();
+
     $('.read-btn').on('click',function(){
         console.log('clicked');
         let $text = $(this).closest('.article-description');
